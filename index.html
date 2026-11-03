@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>LISBON ALIVE™ 42.3 | NEWSROOM CINEMATIC</title>
+<title>LISBON ALIVE™ 42.4 | EMISSÃO SINCRONIZADA</title>
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- FontAwesome Icons -->
@@ -1081,14 +1081,14 @@ showProgram();
 " style="width:100%;height:100%;border:0;display:block;background:#071019" title="LISBON ALIVE 31.0, simulação 3D fictícia"></iframe>
 <button aria-hidden="true" hidden="" id="startGame" onclick="startCity()" style="position:absolute;z-index:40;top:50%;left:50%;transform:translate(-50%,-50%);background:#dc2626;color:white;padding:14px 22px;font-weight:900;border-radius:8px;box-shadow:0 5px 30px #0009" type="button">▶ INICIAR LISBOA 3D</button>
 <div aria-label="Grafismos televisivos da simulação" id="masterOverlay">
-<div class="masterTop"><span class="masterLive"><b>LISBON ALIVE™ <em>TV</em></b><small>JORNAL DA NOITE</small></span><span class="masterDisclaimer">SIMULAÇÃO 3D FICTÍCIA</span><span class="masterClock" id="masterClock">LISBOA</span></div>
-<div id="camera30">🎥 CÂMARA AUTOMÁTICA</div><div class="masterStrap" id="masterStrap">ACONTECIMENTO FICTÍCIO NA CIDADE VIRTUAL</div><div class="masterLower"><div class="masterStory"><strong id="masterHeadline">LISBOA VIRTUAL EM MOVIMENTO</strong><small id="masterSub">CIDADE 3D · REALIZAÇÃO AUTOMÁTICA · CENÁRIO FICTÍCIO</small></div><div class="masterProgram">JORNAL<span>da NOITE</span></div></div>
+<div class="masterTop"><span class="masterLive"><b>LISBON ALIVE™ <em>TV</em></b><small id="tv424TopProgram">JORNAL DA NOITE</small></span><span class="masterDisclaimer">SIMULAÇÃO 3D FICTÍCIA</span><span class="masterClock" id="masterClock">LISBOA</span></div>
+<div id="camera30">🎥 CÂMARA AUTOMÁTICA</div><div class="masterStrap" id="masterStrap">ACONTECIMENTO FICTÍCIO NA CIDADE VIRTUAL</div><div class="masterLower"><div class="masterStory"><strong id="masterHeadline">LISBOA VIRTUAL EM MOVIMENTO</strong><small id="masterSub">CIDADE 3D · REALIZAÇÃO AUTOMÁTICA · CENÁRIO FICTÍCIO</small></div><div class="masterProgram" id="tv424LowerProgram">JORNAL<span>da NOITE</span></div></div>
 </div><div aria-label="Cenário televisivo virtual" id="tv42Scene">
 <div class="world"><div class="sky"></div><div class="floor"></div><div class="orbit"></div><div class="tv421-left-panel"><div class="tv421-panel-label">LISBON ALIVE™ TV</div><div class="tv421-map">◉ EUROPA<br/>◉ ÁFRICA<br/>◉ AMÉRICAS<br/>◉ ÁSIA</div></div><div class="tv421-right-panel"><div class="tv421-panel-label">CENTRO DE INFORMAÇÃO</div><div class="tv421-globe"><div class="tv421-meridian"></div><div class="tv421-equator"></div></div><div class="tv421-panel-foot">PORTUGAL · MUNDO</div></div><div class="tv421-lights"></div><div class="tv423-worldwall"><div class="tv423-grid"></div><div class="tv423-continent">◌ EUROPA   ◌ ÁFRICA   ◌ AMÉRICAS   ◌ ÁSIA</div><div class="tv423-worldtitle">LISBON ALIVE™ <b>WORLD</b></div><div class="tv423-worldsubtitle">PORTUGAL · EUROPA · MUNDO</div></div></div>
 <div class="fiction" id="tv42Disclaimer">CENÁRIO VIRTUAL · SIMULAÇÃO</div>
 <div class="set"><div class="set-inner"><div class="kicker tv423-hidden-news" id="tv42Kicker">LISBON ALIVE™ TV</div><div class="main-title tv423-hidden-news" id="tv42Title">JORNAL DA TARDE</div><div class="detail tv423-hidden-news" id="tv42Detail">Portugal e Mundo</div><div id="tv42Presenter"><div class="tv421-presenter"><div class="tv421-hair"></div><div class="tv421-neck"></div><div class="tv421-face"><span class="tv421-eye left"></span><span class="tv421-eye right"></span><span class="tv421-nose"></span><span class="tv421-mouth"></span></div><div class="tv421-torso"><div class="tv421-shirt"></div><div class="tv421-tie"></div></div><div class="tv421-arm left"></div><div class="tv421-arm right"></div></div><div class="tv421-desk"><div class="tv421-desk-brand">LISBON ALIVE™ TV</div></div></div></div></div>
 <div class="scene-bottom"><span id="tv42Source">NOTÍCIAS REAIS: AGUARDAR FONTES VERIFICADAS</span><span>EMISSÃO VIRTUAL · PORTUGAL</span></div>
-</div><button id="tv42ControlToggle" type="button">📺 GRELHA 42.0</button>
+</div><button id="tv42ControlToggle" type="button">📺 GRELHA 42.4</button>
 <div id="tv42Controls"><strong>REALIZADOR · 42.0</strong><label>Modo de emissão</label><select id="tv42Mode"><option value="auto">Automático · hora de Lisboa</option><option value="manual">Pré-visualização manual</option></select><label>Programa</label><select id="tv42Programme"></select><button id="tv42Return">Regressar ao automático</button><p style="font-size:10px;opacity:.7;margin-top:8px">Os cenários novos são protótipos visuais. Sem notícias ou previsões inventadas.</p></div></section>
 <!-- SIDEBAR: NEWS FEED -->
 <aside class="hidden bg-white border-l border-brand-gray flex-col overflow-hidden" id="sidebarSection">
@@ -1371,6 +1371,74 @@ function switchCamera(){
 switchCamera();setInterval(switchCamera,42000);
 const observer=new MutationObserver(()=>{if(scene.classList.contains('news')&&!views.some(c=>scene.classList.contains(c)))switchCamera()});
 observer.observe(scene,{attributes:true,attributeFilter:['class']});
+})();
+</script><script id="tv424sync">
+/* 42.4: single broadcast graphics authority for every non-city programme.
+   Legacy fictional-city directors remain active only in city mode. */
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const select=$('tv42Programme'),mode=$('tv42Mode'),scene=$('tv42Scene');
+const programmes=[
+['JORNAL DA TARDE','Portugal e Mundo · estúdio virtual','INFORMAÇÃO · ESTÚDIO VIRTUAL','LISBON ALIVE™ TV ◆ ESTÚDIO VIRTUAL ◆ SEM NOTÍCIAS REAIS INTEGRADAS ◆ '],
+['METEO 3D','Previsão ilustrativa · dados em tempo real indisponíveis','METEOROLOGIA · CENÁRIO VIRTUAL','METEO 3D ◆ PREVISÃO ILUSTRATIVA ◆ SEM DADOS METEOROLÓGICOS ATUAIS ◆ '],
+['FÉ EM LISBOA™','Celebração religiosa virtual fictícia','FÉ EM LISBOA™ · CELEBRAÇÃO SIMULADA','FÉ EM LISBOA™ ◆ CELEBRAÇÃO FICTÍCIA ◆ '],
+null,
+['MUNDO 360º','Atualidade internacional · estúdio virtual','INFORMAÇÃO INTERNACIONAL · ESTÚDIO VIRTUAL','MUNDO 360º ◆ ESTÚDIO VIRTUAL ◆ SEM NOTÍCIAS REAIS INTEGRADAS ◆ '],
+null,
+['METEO 3D','Previsão ilustrativa · dados em tempo real indisponíveis','METEOROLOGIA · CENÁRIO VIRTUAL','METEO 3D ◆ PREVISÃO ILUSTRATIVA ◆ SEM DADOS METEOROLÓGICOS ATUAIS ◆ '],
+null,
+['JORNAL DAS 19','Portugal, Europa e Mundo · estúdio virtual','INFORMAÇÃO · ESTÚDIO VIRTUAL','JORNAL DAS 19 ◆ ESTÚDIO VIRTUAL ◆ SEM NOTÍCIAS REAIS INTEGRADAS ◆ '],
+null,
+['METEO 3D','Previsão ilustrativa · dados em tempo real indisponíveis','METEOROLOGIA · CENÁRIO VIRTUAL','METEO 3D ◆ PREVISÃO ILUSTRATIVA ◆ SEM DADOS METEOROLÓGICOS ATUAIS ◆ '],
+['JORNAL DA NOITE','Portugal e Mundo · estúdio virtual','INFORMAÇÃO · ESTÚDIO VIRTUAL','JORNAL DA NOITE ◆ ESTÚDIO VIRTUAL ◆ SEM NOTÍCIAS REAIS INTEGRADAS ◆ '],
+['GRANDE REPORTAGEM','Reportagem virtual · conteúdo editorial não integrado','REPORTAGEM · ESTÚDIO VIRTUAL','GRANDE REPORTAGEM ◆ CONTEÚDO EDITORIAL NÃO INTEGRADO ◆ '],
+null,
+['ÚLTIMA EDIÇÃO','Síntese da atualidade · estúdio virtual','INFORMAÇÃO · ESTÚDIO VIRTUAL','ÚLTIMA EDIÇÃO ◆ ESTÚDIO VIRTUAL ◆ SEM NOTÍCIAS REAIS INTEGRADAS ◆ '],
+['PREVISÃO DE AMANHÃ','Meteorologia ilustrativa · sem dados atuais','METEO 3D · PREVISÃO ILUSTRATIVA','METEO 3D ◆ PREVISÃO DE AMANHÃ ◆ SEM DADOS METEOROLÓGICOS ATUAIS ◆ '],
+['ATÉ AMANHÃ','Regressamos às 14h00','EMISSÃO ENCERRADA','LISBON ALIVE™ TV ◆ EMISSÃO ENCERRADA ◆ REGRESSAMOS ÀS 14H00 ◆ ']
+];
+const marks=['masterHeadline','masterSub','masterStrap','tickerContent','tv424TopProgram'];
+let lastIndex=-2;
+function currentIndex(){
+ if(mode.value==='manual')return Number(select.value);
+ const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Lisbon',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
+ const h=+parts.find(p=>p.type==='hour').value,m=+parts.find(p=>p.type==='minute').value;
+ const t=h*60+m;
+ const times=[840,880,900,930,990,1050,1100,1110,1170,1215,1250,1260,1320,1365,1410,1430];
+ if(t<840)return 16; // standby until the next 14:00 broadcast
+ let idx=0;for(let k=0;k<times.length;k++)if(t>=times[k])idx=k;
+ return idx;
+}
+function apply(){
+ const idx=currentIndex();
+ const p=programmes[idx];
+ const active=!!p;
+ if(active){
+  $('masterHeadline').textContent=p[0];
+  $('masterSub').textContent=p[1];
+  $('masterStrap').textContent=p[2];
+  $('tickerContent').textContent=p[3];
+  $('tv424TopProgram').textContent=p[0];
+  const lower=$('tv424LowerProgram');
+  lower.textContent=p[0];
+  lower.style.fontSize=p[0].length>17?'clamp(12px,1.25vw,21px)':'clamp(13px,1.45vw,24px)';
+  lower.style.display='flex';lower.style.alignItems='center';lower.style.justifyContent='center';
+  lower.style.textAlign='right';lower.style.lineHeight='1.1';
+  if(idx===16 && scene.classList.contains('active')===false){
+   // Existing scheduler updates the scene within 15 seconds.
+  }
+ }else{
+  $('tv424TopProgram').textContent=['LISBOA EM MOVIMENTO','CIDADE EM ALERTA','HORA DE PONTA','LISBOA EM DESTAQUE','LISBOA NUNCA DORME'][[3,5,7,9,13].indexOf(idx)]||'LISBOA 3D';
+  $('tv424LowerProgram').textContent='LISBOA 3D';
+ }
+ if(idx!==lastIndex){
+  lastIndex=idx;
+  if(active && mode.value==='auto')select.value=String(idx);
+ }
+}
+apply();
+setInterval(apply,250);
 })();
 </script></body>
 </html>
