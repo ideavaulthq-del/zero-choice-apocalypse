@@ -7,13 +7,14 @@
   <title>Reino das Jóias — Puzzle Real</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       color: #fff;
       --gold: #ffd56b;
-      --bg-deep: #0c0e22;
+      --gold-dark: #b88428;
+      --bg-deep: #0e1025;
       --panel-bg: rgba(255, 255, 255, 0.08);
       --panel-border: rgba(255, 255, 255, 0.18);
     }
@@ -27,45 +28,48 @@
       margin: 0;
       height: 100vh;
       height: 100dvh;
-      background: radial-gradient(circle at 50% 0%, #3b2b62 0%, #171936 55%, #0c0e22 100%);
+      background: radial-gradient(circle at 50% 0%, #4e3585 0%, #191c3e 55%, #0c0e22 100%);
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: env(safe-area-inset-top, 6px) 8px env(safe-area-inset-bottom, 6px);
+      padding: env(safe-area-inset-top, 4px) 6px env(safe-area-inset-bottom, 6px);
       overflow: hidden;
     }
 
     main {
-      width: min(100%, 700px);
+      width: min(100%, 880px);
       height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 6px;
+      gap: 4px;
     }
 
-    /* Cabeçalho */
+    /* Cabeçalho e Controlo de Som */
     header {
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 44px;
-      min-height: 40px;
+      padding: 0 42px;
+      min-height: 34px;
       flex-shrink: 0;
     }
 
     h1 {
       font-family: 'Cinzel', serif;
-      font-size: clamp(20px, 4.8vw, 32px);
+      font-size: clamp(19px, 4.2vw, 28px);
       font-weight: 900;
       margin: 0;
       background: linear-gradient(180deg, #fff5cc 0%, #ffd56b 50%, #e09f24 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.6));
+      filter: drop-shadow(0 3px 12px rgba(0, 0, 0, 0.6));
       letter-spacing: 0.5px;
-      white-space: nowrap;
+    }
+
+    header p {
+      display: none;
     }
 
     .sound-btn {
@@ -73,28 +77,32 @@
       right: 0;
       top: 50%;
       transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       border: 1px solid var(--panel-border);
       background: var(--panel-bg);
       color: #fff;
-      font-size: 20px;
+      font-size: 16px;
       display: grid;
       place-items: center;
       cursor: pointer;
       transition: transform 0.15s, background 0.15s;
     }
 
+    .sound-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
     .sound-btn:active {
-      transform: translateY(-50%) scale(0.9);
+      transform: translateY(-50%) scale(0.92);
     }
 
     /* Painel de Estatísticas */
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
+      gap: 5px;
       flex-shrink: 0;
     }
 
@@ -102,27 +110,27 @@
       background: var(--panel-bg);
       backdrop-filter: blur(8px);
       border: 1px solid var(--panel-border);
-      border-radius: 12px;
+      border-radius: 10px;
       text-align: center;
-      padding: 6px 4px;
+      padding: 3px 4px;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
 
     .stat small {
       display: block;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 1px;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
       color: #dcd6f7;
-      margin-bottom: 2px;
     }
 
     .stat strong {
       display: block;
-      font-size: clamp(19px, 4.5vw, 26px);
+      font-size: clamp(17px, 3.8vw, 22px);
       font-weight: 800;
       color: #ffe28e;
-      transition: transform 0.2s, color 0.2s;
+      margin-top: 0;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s;
     }
 
     .stat strong.low-moves {
@@ -132,15 +140,15 @@
 
     @keyframes pulseWarn {
       from { transform: scale(1); }
-      to { transform: scale(1.15); }
+      to { transform: scale(1.12); }
     }
 
-    /* Missão */
+    /* Cartão da Missão e Barra de Progresso */
     .mission {
       background: linear-gradient(120deg, rgba(85, 61, 136, 0.9), rgba(48, 45, 102, 0.95));
-      padding: 8px 12px;
-      border: 2px solid rgba(187, 166, 255, 0.45);
-      border-radius: 12px;
+      padding: 5px 10px;
+      border: 1px solid rgba(187, 166, 255, 0.45);
+      border-radius: 10px;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
       flex-shrink: 0;
     }
@@ -149,16 +157,18 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 14px;
-      margin-bottom: 6px;
+      font-size: 12px;
+      margin-bottom: 4px;
       color: #eeeaff;
     }
 
-    .mission-text b { color: #ffe28e; }
+    .mission-text b {
+      color: #ffe28e;
+    }
 
     .progress-track {
       width: 100%;
-      height: 12px;
+      height: 9px;
       background: rgba(11, 14, 41, 0.72);
       border-radius: 999px;
       overflow: hidden;
@@ -174,7 +184,7 @@
       box-shadow: 0 0 12px rgba(255, 213, 107, 0.65);
     }
 
-    /* Tabuleiro */
+    /* Tabuleiro de Jogo */
     .board-stage {
       flex: 1 1 auto;
       min-height: 0;
@@ -182,14 +192,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 8px 0;
       container-type: size;
     }
 
     .board-wrapper {
       position: relative;
-      width: min(100%, 100cqh);
-      aspect-ratio: 1 / 1;
+      width: min(100cqw, 100cqh);
+      height: min(100cqw, 100cqh);
       max-width: 100%;
       max-height: 100%;
     }
@@ -200,117 +209,122 @@
       display: grid;
       grid-template-columns: repeat(8, 1fr);
       grid-template-rows: repeat(8, 1fr);
-      gap: min(1.5cqw, 6px);
-      background: #0d1236;
-      border: min(0.8cqw, 4px) solid #d8ad55;
-      border-radius: min(3.5cqw, 16px);
-      padding: min(1.5cqw, 6px);
-      box-sizing: border-box;
+      gap: 3px;
+      background: #0b123e;
+      border: 3px solid #d8ad55;
+      border-radius: 14px;
+      padding: 3px;
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), inset 0 0 18px rgba(0, 0, 0, 0.8);
       touch-action: none;
       user-select: none;
     }
 
-    /* Célula Estilo Cristal */
     .cell {
       position: relative;
       width: 100%;
       height: 100%;
-      min-width: 0;
-      min-height: 0;
-      border-radius: 22%;
-      background: linear-gradient(145deg, #2b3566, #1a2246);
-      box-shadow: inset 0 3px 5px rgba(255,255,255,0.12), inset 0 -4px 8px rgba(0,0,0,0.6), 0 4px 8px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 10px;
+      background: linear-gradient(150deg, #505a9c, #28366f);
       display: grid;
       place-items: center;
       cursor: pointer;
       padding: 0;
-      border: none;
-      transition: transform 0.1s, filter 0.1s;
+      overflow: visible;
+      transition: transform 0.14s ease, background 0.14s ease, box-shadow 0.14s ease;
     }
 
-    .cell::after {
-      content: '';
-      position: absolute;
-      top: 8%; left: 10%; width: 80%; height: 35%;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
-      border-radius: 50%;
-      pointer-events: none;
+    .cell:nth-child(odd) {
+      background: linear-gradient(150deg, #46538d, #26315f);
     }
 
-    .cell:hover { filter: brightness(1.15); }
+    .cell:hover {
+      filter: brightness(1.1);
+    }
 
     .cell.selected {
-      outline: 4px solid #ffe36e;
-      outline-offset: -4px;
-      transform: scale(0.9);
+      outline: 3px solid #ffe36e;
+      outline-offset: -3px;
+      background: #9c7b47;
+      transform: scale(0.93);
       z-index: 2;
-      box-shadow: 0 0 20px rgba(255, 227, 110, 0.8);
+      box-shadow: 0 0 16px rgba(255, 227, 110, 0.65);
     }
 
     .cell.hint-glow {
       animation: hintPulse 0.9s infinite alternate;
-      outline: 4px dashed #7bed9f;
-      outline-offset: -4px;
+      outline: 3px dashed #7bed9f;
+      outline-offset: -3px;
     }
 
     @keyframes hintPulse {
-      from { transform: scale(0.92); box-shadow: 0 0 10px #7bed9f; }
-      to { transform: scale(1.05); box-shadow: 0 0 25px #7bed9f; }
+      from { transform: scale(0.95); box-shadow: 0 0 6px #7bed9f; }
+      to { transform: scale(1.03); box-shadow: 0 0 20px #7bed9f; }
     }
 
-    /* Jóias */
+    /* Ícone da Jóia */
     .gem {
-      font-size: clamp(26px, 10cqw, 82px);
+      font-size: clamp(28px, min(9.8cqw, 9.8cqh), 82px);
       line-height: 1;
       pointer-events: none;
-      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6));
-      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s;
+      filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.45));
+      transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s;
     }
 
-    .gem.pop { animation: gemPop 0.32s forwards ease-out; }
+    .gem.pop {
+      animation: gemPop 0.32s forwards ease-out;
+    }
+
     @keyframes gemPop {
       0% { transform: scale(1); opacity: 1; }
-      45% { transform: scale(1.5) rotate(15deg); opacity: 0.9; filter: brightness(2); }
+      45% { transform: scale(1.38) rotate(14deg); opacity: 0.9; filter: brightness(1.9); }
       100% { transform: scale(0); opacity: 0; }
     }
 
-    .gem.drop { animation: gemDrop 0.34s cubic-bezier(0.22, 1.25, 0.36, 1); }
+    .gem.drop {
+      animation: gemDrop 0.34s cubic-bezier(0.22, 1.25, 0.36, 1);
+    }
+
     @keyframes gemDrop {
-      0% { transform: translateY(-50px) scale(0.8); opacity: 0.2; }
+      0% { transform: translateY(-48px) scale(0.8); opacity: 0.2; }
       100% { transform: translateY(0) scale(1); opacity: 1; }
     }
 
-    .cell.shake { animation: cellShake 0.3s ease; }
-    @keyframes cellShake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-8px); }
-      75% { transform: translateX(8px); }
+    .cell.shake {
+      animation: cellShake 0.3s ease;
     }
 
-    /* Efeitos Especiais */
+    @keyframes cellShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    /* Emblema de Jóia Especial (Bomba / Raio) */
     .special-badge {
       position: absolute;
       bottom: 3px;
       right: 3px;
-      font-size: clamp(12px, 2.8cqw, 20px);
-      background: rgba(0, 0, 0, 0.85);
-      border: 2px solid #ffd56b;
-      border-radius: 8px;
+      font-size: clamp(11px, 2.2vw, 17px);
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid #ffd56b;
+      border-radius: 6px;
       padding: 1px 4px;
+      line-height: 1.1;
       pointer-events: none;
-      box-shadow: 0 0 10px #ffd56b;
+      box-shadow: 0 0 8px #ffd56b;
     }
 
     .cell.is-special {
-      box-shadow: inset 0 0 20px rgba(255, 213, 107, 0.8), 0 4px 8px rgba(0,0,0,0.4);
-      border: 2px solid rgba(255, 213, 107, 0.9);
+      box-shadow: inset 0 0 16px rgba(255, 213, 107, 0.65);
+      border-color: rgba(255, 213, 107, 0.75);
     }
 
+    /* Partículas de Explosão */
     .sparkle {
       position: absolute;
-      width: 10px;
-      height: 10px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       pointer-events: none;
       z-index: 15;
@@ -318,17 +332,18 @@
     }
 
     @keyframes sparkleOut {
-      0% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+      0% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
       100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0); opacity: 0; }
     }
 
+    /* Pontos flutuantes */
     .floating-score {
       position: absolute;
       pointer-events: none;
       font-weight: 900;
-      font-size: clamp(22px, 5vw, 32px);
+      font-size: clamp(18px, 4.2vw, 26px);
       color: #ffe680;
-      text-shadow: 0 2px 8px #000, 0 0 15px rgba(255, 195, 0, 0.9);
+      text-shadow: 0 2px 6px #000, 0 0 14px rgba(255, 195, 0, 0.85);
       z-index: 20;
       animation: floatUp 0.95s forwards ease-out;
       transform: translate(-50%, -50%);
@@ -336,18 +351,18 @@
     }
 
     @keyframes floatUp {
-      0% { opacity: 0; transform: translate(-50%, -20%) scale(0.5); }
-      20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-      100% { opacity: 0; transform: translate(-50%, -150%) scale(1); }
+      0% { opacity: 0; transform: translate(-50%, -20%) scale(0.7); }
+      20% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+      100% { opacity: 0; transform: translate(-50%, -140%) scale(1); }
     }
 
-    /* Mensagens e Botões */
+    /* Mensagens e Botões de Ação */
     .message {
       text-align: center;
-      min-height: 22px;
-      font-size: 14px;
+      min-height: 18px;
+      font-size: 13px;
       color: #ffe6a6;
-      font-weight: 800;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -357,22 +372,22 @@
     .actions {
       display: grid;
       grid-template-columns: 1fr 1fr auto;
-      gap: 8px;
+      gap: 5px;
       flex-shrink: 0;
     }
 
     .actions button {
-      border: 2px solid rgba(255, 255, 255, 0.32);
-      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: 10px;
       background: #49417f;
       color: #fff;
       font-family: inherit;
-      font-size: 15px;
+      font-size: 12.5px;
       font-weight: 800;
-      padding: 12px 10px;
+      padding: 8px 6px;
       cursor: pointer;
-      transition: transform 0.12s, filter 0.15s;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: transform 0.12s, filter 0.15s, opacity 0.2s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
 
     .actions button.primary {
@@ -381,27 +396,29 @@
       border-color: #fff1b8;
     }
 
+    .actions button:hover:not(:disabled) {
+      filter: brightness(1.08);
+    }
+
     .actions button:active:not(:disabled) {
-      transform: scale(0.94);
+      transform: scale(0.96);
     }
 
     .actions button:disabled {
-      opacity: 0.6;
+      opacity: 0.45;
       cursor: not-allowed;
-      background: #3b345e;
-      border-color: rgba(255, 255, 255, 0.1);
-      color: #a49fc0;
     }
 
+    /* Ajuda */
     .help-btn {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 12px;
-      padding: 9px;
+      border-radius: 9px;
+      padding: 5px 8px;
       color: #ffe494;
       font-family: inherit;
-      font-size: 14px;
-      font-weight: 800;
+      font-size: 12px;
+      font-weight: 700;
       cursor: pointer;
       text-align: center;
       flex-shrink: 0;
@@ -409,24 +426,43 @@
 
     .help-list {
       text-align: left;
-      margin: 0 0 20px;
-      padding-left: 20px;
+      margin: 0 0 18px;
+      padding-left: 18px;
       color: #e4e0ff;
-      font-size: 16px;
-      line-height: 1.6;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .help-list li {
+      margin-bottom: 6px;
+    }
+
+    .help summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: #ffe494;
+    }
+
+    .help ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    .help li {
+      margin-bottom: 4px;
     }
 
     /* Modal */
     .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(10, 11, 27, 0.88);
-      backdrop-filter: blur(6px);
+      background: rgba(10, 11, 27, 0.86);
+      backdrop-filter: blur(5px);
       display: none;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      z-index: 50;
+      z-index: 30;
     }
 
     .overlay.visible {
@@ -434,55 +470,59 @@
       animation: fadeIn 0.25s ease;
     }
 
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
     .modal {
-      max-width: 420px;
+      max-width: 390px;
       width: 100%;
       background: linear-gradient(140deg, #534185, #252957);
-      border: 3px solid #e5bd65;
-      border-radius: 24px;
-      padding: 30px 24px;
+      border: 2px solid #e5bd65;
+      border-radius: 23px;
+      padding: 28px 24px;
       text-align: center;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.75);
       animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     @keyframes modalPop {
-      from { transform: scale(0.8); opacity: 0; }
+      from { transform: scale(0.85); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
 
     .modal h2 {
       font-family: 'Cinzel', serif;
-      font-size: 32px;
+      font-size: 28px;
       color: #ffdf81;
-      margin: 10px 0;
+      margin: 8px 0;
     }
 
     .modal p {
       color: #e4e0ff;
-      font-size: 16px;
+      font-size: 15px;
       line-height: 1.5;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
 
     .modal-actions {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       justify-content: center;
     }
 
     .modal button {
       background: #ffd36c;
       color: #332445;
-      border: none;
-      padding: 14px 24px;
-      border-radius: 14px;
+      border: 0;
+      padding: 13px 22px;
+      border-radius: 13px;
       font-family: inherit;
       font-weight: 900;
-      font-size: 16px;
+      font-size: 15px;
       cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
     }
 
     .modal button.secondary {
@@ -490,9 +530,17 @@
       color: #fff;
     }
 
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: #c0badd;
+      padding: 8px 0 4px;
+    }
+
     @media (max-width: 400px) {
-      .board { gap: 2px; padding: 3px; border-width: 3px; }
-      .actions button { font-size: 13px; padding: 10px 6px; }
+      .board { gap: 2px; padding: 2px; border-width: 2.5px; }
+      .cell { border-radius: 6px; }
+      .actions button { font-size: 12px; padding: 9px 6px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -507,6 +555,7 @@
   <main>
     <header>
       <h1>👑 Reino das Jóias</h1>
+      <p>Uma aventura original de combinar 3</p>
       <button class="sound-btn" id="soundToggle" aria-label="Alternar som" title="Som ativado">🔊</button>
     </header>
 
@@ -538,7 +587,7 @@
 
     <div class="board-stage">
       <div class="board-wrapper" id="boardWrapper">
-        <div class="board" id="board" role="grid" aria-label="Tabuleiro de jóias 8x8"></div>
+        <div class="board" id="board" role="grid" aria-label="Tabuleiro de jóias com oito linhas e oito colunas"></div>
       </div>
     </div>
 
@@ -547,7 +596,7 @@
     <div class="actions">
       <button class="primary" id="hint">✨ Dica (−100)</button>
       <button id="shuffle">🔀 Misturar (−200)</button>
-      <button id="restart" title="Reiniciar">↻</button>
+      <button id="restart" title="Reiniciar jogo">↻ Reiniciar</button>
     </div>
 
     <button type="button" class="help-btn" id="helpBtn">❓ Como jogar e Jóias Especiais</button>
@@ -555,7 +604,7 @@
 
   <div class="overlay" id="overlay">
     <div class="modal">
-      <div style="font-size: 60px;" id="modalIcon">🏆</div>
+      <div style="font-size: 54px;" id="modalIcon">🏆</div>
       <h2 id="modalTitle">Vitória!</h2>
       <div id="modalBody"></div>
       <div class="modal-actions" id="modalActions"></div>
@@ -568,8 +617,8 @@
 
       const N = 8;
       const LEVEL_TIME = 60;
-      const ICONS = ['🟡', '💎', '💜', '💚', '❤️', '🔷'];
-      const GEM_COLORS = ['#ffeaa7', '#74b9ff', '#a29bfe', '#55efc4', '#ff7675', '#0984e3'];
+      const ICONS = ['💎', '💚', '💜', '🔷', '🟡', '❤️'];
+      const GEM_COLORS = ['#74b9ff', '#55efc4', '#a29bfe', '#0984e3', '#ffeaa7', '#ff7675'];
       const SPECIAL_ICONS = { ray: '⚡', bomb: '💥' };
 
       const $ = id => document.getElementById(id);
@@ -580,7 +629,7 @@
       let level = 1;
       let moves = 22;
       let score = 0;
-      let goal = 900;
+      let goal = 1100;
       let timeLeft = LEVEL_TIME;
       let timerInterval = null;
       let selected = null;
@@ -588,7 +637,6 @@
       let busy = false;
       let finished = false;
       let soundEnabled = true;
-      let saveTimeout = null;
 
       const rnd = n => Math.floor(Math.random() * n);
       const idx = (r, c) => r * N + c;
@@ -596,73 +644,46 @@
       const adj = (a, b) => Math.abs(Math.floor(a / N) - Math.floor(b / N)) + Math.abs((a % N) - (b % N)) === 1;
       const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-      // --- Áudio Otimizado ---
+      // --- Áudio Sintetizado ---
       let audioCtx = null;
-      let masterGain = null;
-      let compressor = null;
-
-      function initAudio() {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-          // Compressor para evitar distorção no volume máximo
-          compressor = audioCtx.createDynamicsCompressor();
-          compressor.threshold.value = -10;
-          compressor.knee.value = 10;
-          compressor.ratio.value = 12;
-          compressor.attack.value = 0.003;
-          compressor.release.value = 0.25;
-
-          masterGain = audioCtx.createGain();
-          masterGain.gain.value = 1.0;
-
-          masterGain.connect(compressor);
-          compressor.connect(audioCtx.destination);
-        }
-      }
-
-      function playTone(freq, type = 'sine', duration = 0.15, delay = 0, gainVal = 0.9) {
+      function playTone(freq, type = 'sine', duration = 0.15, delay = 0, gainVal = 0.12) {
         if (!soundEnabled) return;
         try {
-          initAudio();
+          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
           if (audioCtx.state === 'suspended') audioCtx.resume();
-
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
-
           osc.type = type;
           osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
-
           gain.gain.setValueAtTime(gainVal, audioCtx.currentTime + delay);
           gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + duration);
-
           osc.connect(gain);
-          gain.connect(masterGain);
+          gain.connect(audioCtx.destination);
           osc.start(audioCtx.currentTime + delay);
           osc.stop(audioCtx.currentTime + delay + duration);
         } catch (e) {}
       }
 
       const sfx = {
-        select: () => playTone(520, 'sine', 0.08, 0, 0.6),
-        swap: () => { playTone(380, 'triangle', 0.1, 0, 0.8); playTone(480, 'triangle', 0.1, 0.06, 0.8); },
-        invalid: () => { playTone(200, 'sawtooth', 0.14, 0, 0.9); playTone(160, 'sawtooth', 0.16, 0.08, 0.9); },
-        tick: () => playTone(760, 'sine', 0.06, 0, 0.5),
+        select: () => playTone(520, 'sine', 0.08, 0, 0.08),
+        swap: () => { playTone(380, 'triangle', 0.1, 0, 0.08); playTone(480, 'triangle', 0.1, 0.06, 0.08); },
+        invalid: () => { playTone(200, 'sawtooth', 0.14, 0, 0.08); playTone(160, 'sawtooth', 0.16, 0.08, 0.08); },
+        tick: () => playTone(760, 'sine', 0.06, 0, 0.06),
         match: (chain) => {
           const base = 440 + Math.min(chain, 6) * 75;
-          playTone(base, 'sine', 0.18, 0, 0.9);
-          playTone(base * 1.25, 'triangle', 0.22, 0.06, 0.9);
+          playTone(base, 'sine', 0.18, 0, 0.12);
+          playTone(base * 1.25, 'triangle', 0.22, 0.06, 0.12);
         },
         special: () => {
-          playTone(300, 'square', 0.25, 0, 0.8);
-          playTone(600, 'sine', 0.3, 0.05, 1.0);
-          playTone(900, 'sine', 0.35, 0.1, 1.0);
+          playTone(300, 'square', 0.25, 0, 0.1);
+          playTone(600, 'sine', 0.3, 0.05, 0.14);
+          playTone(900, 'sine', 0.35, 0.1, 0.14);
         },
-        win: () => [523, 659, 784, 1046].forEach((f, i) => playTone(f, 'triangle', 0.28, i * 0.1, 1.0)),
-        lose: () => [392, 349, 311, 261].forEach((f, i) => playTone(f, 'sawtooth', 0.28, i * 0.13, 0.8))
+        win: () => [523, 659, 784, 1046].forEach((f, i) => playTone(f, 'triangle', 0.28, i * 0.1, 0.14)),
+        lose: () => [392, 349, 311, 261].forEach((f, i) => playTone(f, 'sawtooth', 0.28, i * 0.13, 0.09))
       };
 
-      // --- Temporizador ---
+      // --- Temporizador do Nível ---
       function stopTimer() {
         if (timerInterval) {
           clearInterval(timerInterval);
@@ -674,11 +695,11 @@
         stopTimer();
         if (reset) timeLeft = LEVEL_TIME;
         updateHeaderUI();
-
         timerInterval = setInterval(() => {
-          if (finished) { stopTimer(); return; }
-          if ($('overlay').classList.contains('visible')) return;
-
+          if (finished) {
+            stopTimer();
+            return;
+          }
           timeLeft = Math.max(0, timeLeft - 1);
           if (timeLeft > 0 && timeLeft <= 5) sfx.tick();
           updateHeaderUI();
@@ -691,9 +712,22 @@
             renderBoard();
             sfx.lose();
             showModal(
-              '⏰', 'Tempo esgotado!',
+              '⏰',
+              'Tempo esgotado!',
               `Os 60 segundos acabaram! Faltaram ${Math.max(0, goal - score).toLocaleString('pt-PT')} pontos.`,
-              [{ label: 'Tentar novamente', primary: true, action: restartLevel }]
+              [{
+                label: 'Tentar novamente',
+                primary: true,
+                action: () => {
+                  score = 0;
+                  moves = Math.max(16, 23 - Math.floor(level / 3));
+                  generateBoard();
+                  finished = false;
+                  msg('Tenta novamente! Tens 60 segundos!');
+                  renderBoard();
+                  startTimer(true);
+                }
+              }]
             );
           }
         }, 1000);
@@ -701,35 +735,22 @@
 
       // --- Persistência ---
       function save() {
-        clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(() => {
-          try {
-            localStorage.setItem('reino-joias-v3', JSON.stringify({
-              level, moves, score, goal, timeLeft, grid, soundEnabled
-            }));
-          } catch (e) {}
-        }, 250);
+        try {
+          localStorage.setItem('reino-joias-v2', JSON.stringify({ level, moves, score, goal, grid, soundEnabled }));
+        } catch (e) {}
       }
 
       function load() {
         try {
-          const s = JSON.parse(localStorage.getItem('reino-joias-v3'));
+          const s = JSON.parse(localStorage.getItem('reino-joias-v2'));
           if (
             s && Number.isInteger(s.level) && s.level > 0 &&
             Number.isInteger(s.moves) && s.moves > 0 &&
-            Number.isFinite(s.score) && s.score >= 0 &&
+            Number.isFinite(s.score) &&
             Array.isArray(s.grid) && s.grid.length === 64 &&
             s.grid.every(x => x && Number.isInteger(x.color) && x.color >= 0 && x.color < ICONS.length)
           ) {
-            const loadedGoal = Number.isFinite(s.goal) && s.goal > 0 ? s.goal : 900 + (s.level - 1) * 400;
-            if (s.score >= loadedGoal) return false;
-
-            level = s.level;
-            moves = s.moves;
-            score = s.score;
-            goal = loadedGoal;
-            timeLeft = Number.isInteger(s.timeLeft) && s.timeLeft > 0 && s.timeLeft <= LEVEL_TIME ? s.timeLeft : LEVEL_TIME;
-            grid = s.grid;
+            ({ level, moves, score, goal, grid } = s);
             if (typeof s.soundEnabled === 'boolean') soundEnabled = s.soundEnabled;
             return true;
           }
@@ -817,13 +838,13 @@
 
         for (let s = 0; s < 6; s++) {
           const angle = (Math.PI * 2 * s) / 6 + (Math.random() - 0.5) * 0.5;
-          const dist = 30 + Math.random() * 30;
+          const dist = 24 + Math.random() * 24;
           const dot = document.createElement('div');
           dot.className = 'sparkle';
           dot.style.left = `${cx}px`;
           dot.style.top = `${cy}px`;
           dot.style.background = color;
-          dot.style.boxShadow = `0 0 10px ${color}`;
+          dot.style.boxShadow = `0 0 8px ${color}`;
           dot.style.setProperty('--dx', `${Math.cos(angle) * dist}px`);
           dot.style.setProperty('--dy', `${Math.sin(angle) * dist}px`);
           wrapperEl.appendChild(dot);
@@ -856,22 +877,14 @@
 
         $('score').textContent = score.toLocaleString('pt-PT');
         const remaining = Math.max(0, goal - score);
-        $('missionText').innerHTML = `<span>🎯 Objetivo: <b>${goal.toLocaleString('pt-PT')}</b></span><span>Faltam <b>${remaining.toLocaleString('pt-PT')}</b></span>`;
+        $('missionText').innerHTML = `<span>🎯 Objetivo: <b>${goal.toLocaleString('pt-PT')} pontos</b></span><span>Faltam <b>${remaining.toLocaleString('pt-PT')}</b></span>`;
 
         const pct = Math.min(100, Math.round((score / goal) * 100));
         $('progressFill').style.width = `${pct}%`;
 
-        const hintBtn = $('hint');
-        const shuffleBtn = $('shuffle');
-
-        hintBtn.disabled = score < 100 || busy || finished;
-        hintBtn.textContent = hintBtn.disabled ? '🔒 Dica' : '✨ Dica (−100)';
-
-        shuffleBtn.disabled = score < 200 || busy || finished;
-        shuffleBtn.textContent = shuffleBtn.disabled ? '🔒 Misturar' : '🔀 Misturar (−200)';
-
+        $('hint').disabled = score < 100 || busy || finished;
+        $('shuffle').disabled = score < 200 || busy || finished;
         $('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
-        $('soundToggle').title = soundEnabled ? 'Desligar som' : 'Ligar som';
       }
 
       function renderBoard(droppingIndices = new Set()) {
@@ -886,7 +899,9 @@
           if (hintCells.includes(i)) btn.classList.add('hint-glow');
           if (cellData?.special) btn.classList.add('is-special');
 
+          btn.setAttribute('role', 'gridcell');
           btn.setAttribute('aria-label', `Linha ${Math.floor(i / N) + 1}, coluna ${(i % N) + 1}: ${cellData ? ICONS[cellData.color] : 'vazio'}`);
+          btn.setAttribute('aria-selected', selected === i ? 'true' : 'false');
 
           if (cellData) {
             const gemSpan = document.createElement('span');
@@ -902,19 +917,17 @@
             }
           }
 
-          // Eventos de Toque
           btn.addEventListener('click', () => handleTap(i));
           btn.addEventListener('pointerdown', e => {
             if (busy || finished) return;
             btn.dataset.startX = e.clientX;
             btn.dataset.startY = e.clientY;
-            try { btn.setPointerCapture(e.pointerId); } catch {}
           });
           btn.addEventListener('pointermove', e => {
             if (btn.dataset.startX === undefined || busy || finished) return;
             const dx = e.clientX - Number(btn.dataset.startX);
             const dy = e.clientY - Number(btn.dataset.startY);
-            if (Math.hypot(dx, dy) > 25) {
+            if (Math.hypot(dx, dy) > 22) {
               delete btn.dataset.startX;
               const r = Math.floor(i / N), c = i % N;
               let tr = r, tc = c;
@@ -934,6 +947,7 @@
         });
 
         boardEl.replaceChildren(fragment);
+        save();
       }
 
       function msg(text) {
@@ -1016,7 +1030,7 @@
           boardEl.children[a]?.classList.add('shake');
           boardEl.children[b]?.classList.add('shake');
           msg('Essa troca não cria uma combinação.');
-          await sleep(300);
+          await sleep(280);
           busy = false;
           updateHeaderUI();
           return;
@@ -1027,25 +1041,23 @@
         let turnPoints = 0;
 
         while (true) {
-          if (finished) break;
           const groups = findGroups(grid);
           if (!groups.length) break;
           chain++;
 
           const matchedSet = new Set();
-          const spawnMap = new Map();
+          const specialsToSpawn = [];
 
           for (const g of groups) {
             g.forEach(idxCell => matchedSet.add(idxCell));
             if (g.length >= 4) {
               const spawnIdx = g.includes(b) ? b : (g.includes(a) ? a : g[Math.floor(g.length / 2)]);
               const color = grid[spawnIdx]?.color ?? 0;
-              const type = g.length >= 5 ? 'bomb' : 'ray';
-
-              const prev = spawnMap.get(spawnIdx);
-              if (!prev || (prev.type === 'ray' && type === 'bomb')) {
-                spawnMap.set(spawnIdx, { index: spawnIdx, color, type });
-              }
+              specialsToSpawn.push({
+                index: spawnIdx,
+                color,
+                type: g.length >= 5 ? 'bomb' : 'ray'
+              });
             }
           }
 
@@ -1060,7 +1072,7 @@
           if (triggeredSpecial) sfx.special();
           else sfx.match(chain);
 
-          const stepPoints = toClear.size * 70 * chain + (spawnMap.size * 100);
+          const stepPoints = toClear.size * 70 * chain + (specialsToSpawn.length * 100);
           turnPoints += stepPoints;
           score += stepPoints;
 
@@ -1069,10 +1081,9 @@
           updateHeaderUI();
 
           await sleep(300);
-          if (finished) break;
 
           toClear.forEach(pos => { grid[pos] = null; });
-          for (const sp of spawnMap.values()) {
+          for (const sp of specialsToSpawn) {
             grid[sp.index] = { color: sp.color, special: sp.type };
           }
 
@@ -1098,117 +1109,105 @@
           await sleep(320);
         }
 
-        if (!finished) {
-          msg(`✨ +${turnPoints} pontos${chain > 1 ? ` · Combo x${chain}!` : '!'}`);
+        msg(`✨ +${turnPoints.toLocaleString('pt-PT')} pontos${chain > 1 ? ` · Combo x${chain}!` : '!'}`);
 
-          if (score >= goal) {
-            finished = true;
-            stopTimer();
-            sfx.win();
-            const nextLevel = level + 1;
-            const nextMoves = Math.max(16, 23 - Math.floor(nextLevel / 3));
-            const nextGoal = 900 + (nextLevel - 1) * 400;
-            try {
-              localStorage.setItem('reino-joias-v3', JSON.stringify({
-                level: nextLevel, moves: nextMoves, score: 0, goal: nextGoal,
-                timeLeft: LEVEL_TIME, grid, soundEnabled
-              }));
-            } catch (e) {}
-
-            showModal(
-              '🏆', 'Nível concluído!',
-              `Conseguiste ${score.toLocaleString('pt-PT')} pontos em ${LEVEL_TIME - timeLeft}s!`,
-              [{
-                label: 'Próximo nível',
-                primary: true,
-                action: () => {
-                  level = nextLevel;
-                  score = 0;
-                  moves = nextMoves;
-                  goal = nextGoal;
-                  generateBoard();
-                  finished = false;
-                  msg('Novo nível! Tens 60 segundos 👑');
-                  renderBoard();
-                  startTimer(true);
-                  save();
-                }
-              }]
-            );
-          } else if (moves <= 0) {
-            finished = true;
-            stopTimer();
-            sfx.lose();
-            showModal(
-              '💔', 'Fim das jogadas',
-              `Faltaram ${(goal - score).toLocaleString('pt-PT')} pontos para a missão.`,
-              [{ label: 'Tentar novamente', primary: true, action: restartLevel }]
-            );
-          } else {
-            if (!findPossibleMove()) {
+        if (score >= goal) {
+          finished = true;
+          stopTimer();
+          sfx.win();
+          showModal(
+          '🏆',
+          'Nível concluído!',
+          `Conseguiste ${score.toLocaleString('pt-PT')} pontos em ${LEVEL_TIME - timeLeft}s!`,
+          [{
+            label: 'Próximo nível',
+            primary: true,
+            action: () => {
+              level++;
+              score = 0;
+              moves = Math.max(16, 23 - Math.floor(level / 3));
+              goal = 1100 + (level - 1) * 400;
               generateBoard();
+              finished = false;
+              msg('Novo nível! Tens 60 segundos 👑');
               renderBoard();
-              msg('Sem combinações possíveis: tabuleiro renovado!');
+              startTimer(true);
             }
-            save();
-          }
-        }
-
-        busy = false;
-        updateHeaderUI();
-      }
-
-      function restartLevel() {
-        score = 0;
-        moves = Math.max(16, 23 - Math.floor(level / 3));
-        generateBoard();
-        finished = false;
-        msg('Tenta novamente! Tens 60 segundos!');
-        renderBoard();
-        startTimer(true);
-        save();
-      }
-
-      function showModal(icon, title, content, buttons, isHtml = false) {
-        $('modalIcon').textContent = icon;
-        $('modalTitle').textContent = title;
-        const bodyEl = $('modalBody');
-        if (isHtml) {
-          bodyEl.innerHTML = content;
-        } else {
-          const p = document.createElement('p');
-          p.textContent = content;
-          bodyEl.replaceChildren(p);
-        }
-        const actionsEl = $('modalActions');
-        actionsEl.replaceChildren(...buttons.map(b => {
-          const btn = document.createElement('button');
-          btn.textContent = b.label;
-          if (!b.primary) btn.className = 'secondary';
-          btn.onclick = () => {
-            $('overlay').classList.remove('visible');
-            b.action?.();
-          };
-          return btn;
-        }));
-        $('overlay').classList.add('visible');
-      }
-
-      // --- Inicialização e Eventos Globais ---
-      $('helpBtn').onclick = () => {
-        showModal(
-          '👑', 'Como Jogar',
-          `<ul class="help-list">
-            <li><b>Combinar 3:</b> Toca em duas jóias vizinhas ou desliza uma jóia para o lado.</li>
-            <li><b>⚡ Raio (4 em linha):</b> Limpa a linha e a coluna!</li>
-            <li><b>💥 Bomba (5+):</b> Explode uma área 3x3!</li>
-          </ul>`,
-          [{ label: 'Entendi!', primary: true }],
-          true
+          }]
         );
-      };
+      } else if (moves <= 0) {
+        finished = true;
+        stopTimer();
+        sfx.lose();
+        showModal(
+          '💔',
+          'Fim das jogadas',
+          `Faltaram ${(goal - score).toLocaleString('pt-PT')} pontos para a missão.`,
+          [{
+            label: 'Tentar novamente',
+            primary: true,
+            action: () => {
+              score = 0;
+              moves = Math.max(16, 23 - Math.floor(level / 3));
+              generateBoard();
+              finished = false;
+              msg('Tenta novamente!');
+              renderBoard();
+              startTimer(true);
+            }
+          }]
+        );
+      } else if (!findPossibleMove()) {
+        generateBoard();
+        renderBoard();
+        msg('Sem combinações possíveis: tabuleiro renovado!');
+      }
 
-      $('soundToggle').onclick = () => {
+      busy = false;
+      updateHeaderUI();
+    }
+
+    function showModal(icon, title, content, buttons, isHtml = false) {
+      $('modalIcon').textContent = icon;
+      $('modalTitle').textContent = title;
+      const bodyEl = $('modalBody');
+      if (isHtml) {
+        bodyEl.innerHTML = content;
+      } else {
+        const p = document.createElement('p');
+        p.textContent = content;
+        bodyEl.replaceChildren(p);
+      }
+      const actionsEl = $('modalActions');
+      actionsEl.replaceChildren(...buttons.map(b => {
+        const btn = document.createElement('button');
+        btn.textContent = b.label;
+        if (!b.primary) btn.className = 'secondary';
+        btn.onclick = () => {
+          $('overlay').classList.remove('visible');
+          b.action?.();
+        };
+        return btn;
+      }));
+      $('overlay').classList.add('visible');
+    }
+
+    $('helpBtn').onclick = () => {
+      showModal(
+        '👑',
+        'Como Jogar',
+        `<ul class="help-list">
+          <li><b>Combinar 3:</b> Toca em duas jóias vizinhas ou desliza uma jóia para uma casa ao lado.</li>
+          <li><b>⚡ Jóia Raio (4 em linha):</b> Destrói toda a linha e a coluna!</li>
+          <li><b>💥 Jóia Bomba (5 ou mais):</b> Explode uma área 3×3 à sua volta!</li>
+          <li><b>Combos:</b> Reações em cadeia multiplicam os pontos.</li>
+        </ul>`,
+        [{ label: 'Entendi!', primary: true }],
+        true
+      );
+    };
+
+    $('soundToggle').onclick = () => {
         soundEnabled = !soundEnabled;
         if (soundEnabled) sfx.select();
         updateHeaderUI();
@@ -1216,7 +1215,11 @@
       };
 
       $('hint').onclick = () => {
-        if (busy || finished || score < 100) return;
+        if (busy || finished) return;
+        if (score < 100) {
+          msg('Precisas de 100 pontos para usar uma dica.');
+          return;
+        }
         const move = findPossibleMove();
         if (!move) { generateBoard(); renderBoard(); return; }
         score -= 100;
@@ -1224,12 +1227,15 @@
         hintCells = move;
         sfx.select();
         renderBoard();
-        msg('✨ Troca as duas jóias a verde!');
-        save();
+        msg('✨ Troca as duas jóias destacadas a verde para formar uma combinação.');
       };
 
       $('shuffle').onclick = () => {
-        if (busy || finished || score < 200) return;
+        if (busy || finished) return;
+        if (score < 200) {
+          msg('Precisas de 200 pontos para misturar.');
+          return;
+        }
         score -= 200;
         selected = null;
         hintCells = [];
@@ -1237,45 +1243,42 @@
         sfx.swap();
         renderBoard();
         msg('🔀 Tabuleiro misturado!');
-        save();
       };
 
       $('restart').onclick = () => {
         if (busy) return;
         showModal(
-          '↻', 'Reiniciar?',
-          'Vais voltar ao nível 1 e perder o progresso.',
+          '↻',
+          'Reiniciar o jogo?',
+          'Vais voltar ao nível 1 e perder o progresso guardado.',
           [
             { label: 'Cancelar', primary: false },
             {
-              label: 'Sim, reiniciar',
+              label: 'Confirmar reinício',
               primary: true,
               action: () => {
                 level = 1;
-                goal = 900;
-                restartLevel();
+                score = 0;
+                moves = 22;
+                goal = 1100;
+                selected = null;
+                hintCells = [];
+                finished = false;
+                generateBoard();
+                msg('Nova aventura iniciada!');
+                renderBoard();
+                startTimer(true);
               }
             }
           ]
         );
       };
 
-      // Atualiza o layout com debounce se o ecrã rodar ou mudar de tamanho
-      let resizeTimeout = null;
-      window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          if (!busy) updateHeaderUI();
-        }, 120);
-      });
-
-      // Carregar jogo ou iniciar novo
-      const resumed = load();
-      if (!resumed) generateBoard();
+      if (!load()) generateBoard();
       if (findGroups(grid).length || !findPossibleMove()) generateBoard();
       renderBoard();
-      startTimer(!resumed);
-      msg(resumed ? `Nível ${level} retomado! Tens ${timeLeft}s!` : 'Tens 60 segundos! Boa sorte!');
+      startTimer(true);
+      msg('Tens 60 segundos por nível! Boa sorte!');
     })();
   </script>
 </body>
