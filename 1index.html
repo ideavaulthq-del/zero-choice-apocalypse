@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#141633">
+  <title>Reino das Jóias — Puzzle Real</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      color: #fff;
+      --gold: #ffd56b;
+      --bg-deep: #0c0e22;
+      --panel-bg: rgba(255, 255, 255, 0.08);
+      --panel-border: rgba(255, 255, 255, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      height: 100dvh;
+      background: radial-gradient(circle at 50% 0%, #3b2b62 0%, #171936 55%, #0c0e22 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: env(safe-area-inset-top, 6px) 8px env(safe-area-inset-bottom, 6px);
+      overflow: hidden;
+    }
+
+    main {
+      width: min(100%, 700px);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    /* Cabeçalho */
+    header {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 44px;
+      min-height: 40px;
+      flex-shrink: 0;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(20px, 4.8vw, 32px);
+      font-weight: 900;
+      margin: 0;
+      background: linear-gradient(180deg, #fff5cc 0%, #ffd56b 50%, #e09f24 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.6));
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .sound-btn {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--panel-border);
+      background: var(--panel-bg);
+      color: #fff;
+      font-size: 20px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    .sound-btn:active {
+      transform: translateY(-50%) scale(0.9);
+    }
+
+    /* Painel de Estatísticas */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .stat {
+      background: var(--panel-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      text-align: center;
+      padding: 6px 4px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    .stat small {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #dcd6f7;
+      margin-bottom: 2px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: clamp(19px, 4.5vw, 26px);
+      font-weight: 800;
+      color: #ffe28e;
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .stat strong.low-moves {
+      color: #ff6b6b;
+      animation: pulseWarn 0.8s infinite alternate;
+    }
+
+    @keyframes pulseWarn {
+      from { transform: scale(1); }
+      to { transform: scale(1.15); }
+    }
+
+    /* Missão */
+    .mission {
+      background: linear-gradient(120deg, rgba(85, 61, 136, 0.9), rgba(48, 45, 102, 0.95));
+      padding: 8px 12px;
+      border: 2px solid rgba(187, 166, 255, 0.45);
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      flex-shrink: 0;
+    }
+
+    .mission-text {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #eeeaff;
+    }
+
+    .mission-text b { color: #ffe28e; }
+
+    .progress-track {
+      width: 100%;
+      height: 12px;
+      background: rgba(11, 14, 41, 0.72);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #f6b93b, #ffeaa7, #ffd56b);
+      border-radius: 999px;
+      transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 0 12px rgba(255, 213, 107, 0.65);
+    }
+
+    /* Tabuleiro */
+    .board-stage {
+      flex: 1 1 auto;
+      min-height: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 0;
+      container-type: size;
+    }
+
+    .board-wrapper {
+      position: relative;
+      width: min(100%, 100cqh);
+      aspect-ratio: 1 / 1;
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .board {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      gap: min(1.5cqw, 6px);
+      background: #0d1236;
+      border: min(0.8cqw, 4px) solid #d8ad55;
+      border-radius: min(3.5cqw, 16px);
+      padding: min(1.5cqw, 6px);
+      box-sizing: border-box;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), inset 0 0 18px rgba(0, 0, 0, 0.8);
+      touch-action: none;
+      user-select: none;
+    }
+
+    /* Célula Estilo Cristal */
+    .cell {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      min-height: 0;
+      border-radius: 22%;
+      background: linear-gradient(145deg, #2b3566, #1a2246);
+      box-shadow: inset 0 3px 5px rgba(255,255,255,0.12), inset 0 -4px 8px rgba(0,0,0,0.6), 0 4px 8px rgba(0,0,0,0.4);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      padding: 0;
+      border: none;
+      transition: transform 0.1s, filter 0.1s;
+    }
+
+    .cell::after {
+      content: '';
+      position: absolute;
+      top: 8%; left: 10%; width: 80%; height: 35%;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .cell:hover { filter: brightness(1.15); }
+
+    .cell.selected {
+      outline: 4px solid #ffe36e;
+      outline-offset: -4px;
+      transform: scale(0.9);
+      z-index: 2;
+      box-shadow: 0 0 20px rgba(255, 227, 110, 0.8);
+    }
+
+    .cell.hint-glow {
+      animation: hintPulse 0.9s infinite alternate;
+      outline: 4px dashed #7bed9f;
+      outline-offset: -4px;
+    }
+
+    @keyframes hintPulse {
+      from { transform: scale(0.92); box-shadow: 0 0 10px #7bed9f; }
+      to { transform: scale(1.05); box-shadow: 0 0 25px #7bed9f; }
+    }
+
+    /* Jóias */
+    .gem {
+      font-size: clamp(26px, 10cqw, 82px);
+      line-height: 1;
+      pointer-events: none;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6));
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s;
+    }
+
+    .gem.pop { animation: gemPop 0.32s forwards ease-out; }
+    @keyframes gemPop {
+      0% { transform: scale(1); opacity: 1; }
+      45% { transform: scale(1.5) rotate(15deg); opacity: 0.9; filter: brightness(2); }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    .gem.drop { animation: gemDrop 0.34s cubic-bezier(0.22, 1.25, 0.36, 1); }
+    @keyframes gemDrop {
+      0% { transform: translateY(-50px) scale(0.8); opacity: 0.2; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .cell.shake { animation: cellShake 0.3s ease; }
+    @keyframes cellShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    /* Efeitos Especiais */
+    .special-badge {
+      position: absolute;
+      bottom: 3px;
+      right: 3px;
+      font-size: clamp(12px, 2.8cqw, 20px);
+      background: rgba(0, 0, 0, 0.85);
+      border: 2px solid #ffd56b;
+      border-radius: 8px;
+      padding: 1px 4px;
+      pointer-events: none;
+      box-shadow: 0 0 10px #ffd56b;
+    }
+
+    .cell.is-special {
+      box-shadow: inset 0 0 20px rgba(255, 213, 107, 0.8), 0 4px 8px rgba(0,0,0,0.4);
+      border: 2px solid rgba(255, 213, 107, 0.9);
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 15;
+      animation: sparkleOut 0.55s forwards cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes sparkleOut {
+      0% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+      100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0); opacity: 0; }
+    }
+
+    .floating-score {
+      position: absolute;
+      pointer-events: none;
+      font-weight: 900;
+      font-size: clamp(22px, 5vw, 32px);
+      color: #ffe680;
+      text-shadow: 0 2px 8px #000, 0 0 15px rgba(255, 195, 0, 0.9);
+      z-index: 20;
+      animation: floatUp 0.95s forwards ease-out;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 0; transform: translate(-50%, -20%) scale(0.5); }
+      20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+      100% { opacity: 0; transform: translate(-50%, -150%) scale(1); }
+    }
+
+    /* Mensagens e Botões */
+    .message {
+      text-align: center;
+      min-height: 22px;
+      font-size: 14px;
+      color: #ffe6a6;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .actions button {
+      border: 2px solid rgba(255, 255, 255, 0.32);
+      border-radius: 14px;
+      background: #49417f;
+      color: #fff;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 800;
+      padding: 12px 10px;
+      cursor: pointer;
+      transition: transform 0.12s, filter 0.15s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .actions button.primary {
+      background: linear-gradient(120deg, #f6bc42, #f8d97b);
+      color: #30214c;
+      border-color: #fff1b8;
+    }
+
+    .actions button:active:not(:disabled) {
+      transform: scale(0.94);
+    }
+
+    .actions button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background: #3b345e;
+      border-color: rgba(255, 255, 255, 0.1);
+      color: #a49fc0;
+    }
+
+    .help-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 12px;
+      padding: 9px;
+      color: #ffe494;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .help-list {
+      text-align: left;
+      margin: 0 0 20px;
+      padding-left: 20px;
+      color: #e4e0ff;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* Modal */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 11, 27, 0.88);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 50;
+    }
+
+    .overlay.visible {
+      display: flex;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .modal {
+      max-width: 420px;
+      width: 100%;
+      background: linear-gradient(140deg, #534185, #252957);
+      border: 3px solid #e5bd65;
+      border-radius: 24px;
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8);
+      animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 32px;
+      color: #ffdf81;
+      margin: 10px 0;
+    }
+
+    .modal p {
+      color: #e4e0ff;
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .modal button {
+      background: #ffd36c;
+      color: #332445;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 14px;
+      font-family: inherit;
+      font-weight: 900;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .modal button.secondary {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+
+    @media (max-width: 400px) {
+      .board { gap: 2px; padding: 3px; border-width: 3px; }
+      .actions button { font-size: 13px; padding: 10px 6px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>👑 Reino das Jóias</h1>
+      <button class="sound-btn" id="soundToggle" aria-label="Alternar som" title="Som ativado">🔊</button>
+    </header>
+
+    <section class="stats">
+      <div class="stat">
+        <small>NÍVEL</small>
+        <strong id="level">1</strong>
+      </div>
+      <div class="stat">
+        <small>TEMPO</small>
+        <strong id="timer">60s</strong>
+      </div>
+      <div class="stat">
+        <small>JOGADAS</small>
+        <strong id="moves">22</strong>
+      </div>
+      <div class="stat">
+        <small>PONTOS</small>
+        <strong id="score">0</strong>
+      </div>
+    </section>
+
+    <div class="mission">
+      <div class="mission-text" id="missionText"></div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <div class="board-stage">
+      <div class="board-wrapper" id="boardWrapper">
+        <div class="board" id="board" role="grid" aria-label="Tabuleiro de jóias 8x8"></div>
+      </div>
+    </div>
+
+    <div class="message" id="message" aria-live="polite"></div>
+
+    <div class="actions">
+      <button class="primary" id="hint">✨ Dica (−100)</button>
+      <button id="shuffle">🔀 Misturar (−200)</button>
+      <button id="restart" title="Reiniciar">↻</button>
+    </div>
+
+    <button type="button" class="help-btn" id="helpBtn">❓ Como jogar e Jóias Especiais</button>
+  </main>
+
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <div style="font-size: 60px;" id="modalIcon">🏆</div>
+      <h2 id="modalTitle">Vitória!</h2>
+      <div id="modalBody"></div>
+      <div class="modal-actions" id="modalActions"></div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const N = 8;
+      const LEVEL_TIME = 60;
+      const ICONS = ['🟡', '💎', '💜', '💚', '❤️', '🔷'];
+      const GEM_COLORS = ['#ffeaa7', '#74b9ff', '#a29bfe', '#55efc4', '#ff7675', '#0984e3'];
+      const SPECIAL_ICONS = { ray: '⚡', bomb: '💥' };
+
+      const $ = id => document.getElementById(id);
+      const boardEl = $('board');
+      const wrapperEl = $('boardWrapper');
+
+      let grid = [];
+      let level = 1;
+      let moves = 22;
+      let score = 0;
+      let goal = 900;
+      let timeLeft = LEVEL_TIME;
+      let timerInterval = null;
+      let selected = null;
+      let hintCells = [];
+      let busy = false;
+      let finished = false;
+      let soundEnabled = true;
+      let saveTimeout = null;
+
+      const rnd = n => Math.floor(Math.random() * n);
+      const idx = (r, c) => r * N + c;
+      const valid = (r, c) => r >= 0 && r < N && c >= 0 && c < N;
+      const adj = (a, b) => Math.abs(Math.floor(a / N) - Math.floor(b / N)) + Math.abs((a % N) - (b % N)) === 1;
+      const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+      // --- Áudio Otimizado ---
+      let audioCtx = null;
+      let masterGain = null;
+      let compressor = null;
+
+      function initAudio() {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+          // Compressor para evitar distorção no volume máximo
+          compressor = audioCtx.createDynamicsCompressor();
+          compressor.threshold.value = -10;
+          compressor.knee.value = 10;
+          compressor.ratio.value = 12;
+          compressor.attack.value = 0.003;
+          compressor.release.value = 0.25;
+
+          masterGain = audioCtx.createGain();
+          masterGain.gain.value = 1.0;
+
+          masterGain.connect(compressor);
+          compressor.connect(audioCtx.destination);
+        }
+      }
+
+      function playTone(freq, type = 'sine', duration = 0.15, delay = 0, gainVal = 0.9) {
+        if (!soundEnabled) return;
+        try {
+          initAudio();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+
+          gain.gain.setValueAtTime(gainVal, audioCtx.currentTime + delay);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + duration);
+
+          osc.connect(gain);
+          gain.connect(masterGain);
+          osc.start(audioCtx.currentTime + delay);
+          osc.stop(audioCtx.currentTime + delay + duration);
+        } catch (e) {}
+      }
+
+      const sfx = {
+        select: () => playTone(520, 'sine', 0.08, 0, 0.6),
+        swap: () => { playTone(380, 'triangle', 0.1, 0, 0.8); playTone(480, 'triangle', 0.1, 0.06, 0.8); },
+        invalid: () => { playTone(200, 'sawtooth', 0.14, 0, 0.9); playTone(160, 'sawtooth', 0.16, 0.08, 0.9); },
+        tick: () => playTone(760, 'sine', 0.06, 0, 0.5),
+        match: (chain) => {
+          const base = 440 + Math.min(chain, 6) * 75;
+          playTone(base, 'sine', 0.18, 0, 0.9);
+          playTone(base * 1.25, 'triangle', 0.22, 0.06, 0.9);
+        },
+        special: () => {
+          playTone(300, 'square', 0.25, 0, 0.8);
+          playTone(600, 'sine', 0.3, 0.05, 1.0);
+          playTone(900, 'sine', 0.35, 0.1, 1.0);
+        },
+        win: () => [523, 659, 784, 1046].forEach((f, i) => playTone(f, 'triangle', 0.28, i * 0.1, 1.0)),
+        lose: () => [392, 349, 311, 261].forEach((f, i) => playTone(f, 'sawtooth', 0.28, i * 0.13, 0.8))
+      };
+
+      // --- Temporizador ---
+      function stopTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      function startTimer(reset = true) {
+        stopTimer();
+        if (reset) timeLeft = LEVEL_TIME;
+        updateHeaderUI();
+
+        timerInterval = setInterval(() => {
+          if (finished) { stopTimer(); return; }
+          if ($('overlay').classList.contains('visible')) return;
+
+          timeLeft = Math.max(0, timeLeft - 1);
+          if (timeLeft > 0 && timeLeft <= 5) sfx.tick();
+          updateHeaderUI();
+
+          if (timeLeft <= 0) {
+            stopTimer();
+            finished = true;
+            selected = null;
+            hintCells = [];
+            renderBoard();
+            sfx.lose();
+            showModal(
+              '⏰', 'Tempo esgotado!',
+              `Os 60 segundos acabaram! Faltaram ${Math.max(0, goal - score).toLocaleString('pt-PT')} pontos.`,
+              [{ label: 'Tentar novamente', primary: true, action: restartLevel }]
+            );
+          }
+        }, 1000);
+      }
+
+      // --- Persistência ---
+      function save() {
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => {
+          try {
+            localStorage.setItem('reino-joias-v3', JSON.stringify({
+              level, moves, score, goal, timeLeft, grid, soundEnabled
+            }));
+          } catch (e) {}
+        }, 250);
+      }
+
+      function load() {
+        try {
+          const s = JSON.parse(localStorage.getItem('reino-joias-v3'));
+          if (
+            s && Number.isInteger(s.level) && s.level > 0 &&
+            Number.isInteger(s.moves) && s.moves > 0 &&
+            Number.isFinite(s.score) && s.score >= 0 &&
+            Array.isArray(s.grid) && s.grid.length === 64 &&
+            s.grid.every(x => x && Number.isInteger(x.color) && x.color >= 0 && x.color < ICONS.length)
+          ) {
+            const loadedGoal = Number.isFinite(s.goal) && s.goal > 0 ? s.goal : 900 + (s.level - 1) * 400;
+            if (s.score >= loadedGoal) return false;
+
+            level = s.level;
+            moves = s.moves;
+            score = s.score;
+            goal = loadedGoal;
+            timeLeft = Number.isInteger(s.timeLeft) && s.timeLeft > 0 && s.timeLeft <= LEVEL_TIME ? s.timeLeft : LEVEL_TIME;
+            grid = s.grid;
+            if (typeof s.soundEnabled === 'boolean') soundEnabled = s.soundEnabled;
+            return true;
+          }
+        } catch (e) {}
+        return false;
+      }
+
+      // --- Lógica de Combinações ---
+      function findGroups(g) {
+        const groups = [];
+        for (let r = 0; r < N; r++) {
+          for (let c = 0; c < N;) {
+            const cell = g[idx(r, c)];
+            if (!cell) { c++; continue; }
+            let e = c + 1;
+            while (e < N && g[idx(r, e)] && g[idx(r, e)].color === cell.color) e++;
+            if (e - c >= 3) {
+              const cells = [];
+              for (let k = c; k < e; k++) cells.push(idx(r, k));
+              groups.push(cells);
+            }
+            c = e;
+          }
+        }
+        for (let c = 0; c < N; c++) {
+          for (let r = 0; r < N;) {
+            const cell = g[idx(r, c)];
+            if (!cell) { r++; continue; }
+            let e = r + 1;
+            while (e < N && g[idx(e, c)] && g[idx(e, c)].color === cell.color) e++;
+            if (e - r >= 3) {
+              const cells = [];
+              for (let k = r; k < e; k++) cells.push(idx(k, c));
+              groups.push(cells);
+            }
+            r = e;
+          }
+        }
+        return groups;
+      }
+
+      function swapData(a, b) {
+        [grid[a], grid[b]] = [grid[b], grid[a]];
+      }
+
+      function findPossibleMove() {
+        for (let a = 0; a < 64; a++) {
+          const r = Math.floor(a / N), c = a % N;
+          for (const [dr, dc] of [[0, 1], [1, 0]]) {
+            const rr = r + dr, cc = c + dc;
+            if (!valid(rr, cc)) continue;
+            const b = idx(rr, cc);
+            swapData(a, b);
+            const ok = findGroups(grid).length > 0;
+            swapData(a, b);
+            if (ok) return [a, b];
+          }
+        }
+        return null;
+      }
+
+      function generateBoard() {
+        let attempts = 0;
+        do {
+          grid = Array(64).fill(null);
+          for (let r = 0; r < N; r++) {
+            for (let c = 0; c < N; c++) {
+              const choices = ICONS.map((_, i) => i).filter(v =>
+                !(c >= 2 && grid[idx(r, c - 1)]?.color === v && grid[idx(r, c - 2)]?.color === v) &&
+                !(r >= 2 && grid[idx(r - 1, c)]?.color === v && grid[idx(r - 2, c)]?.color === v)
+              );
+              grid[idx(r, c)] = { color: choices[rnd(choices.length)], special: null };
+            }
+          }
+        } while (!findPossibleMove() && ++attempts < 100);
+      }
+
+      // --- Efeitos Visuais ---
+      function spawnSparkles(cellIndex, colorIdx) {
+        const cellEl = boardEl.children[cellIndex];
+        if (!cellEl) return;
+        const cx = cellEl.offsetLeft + cellEl.offsetWidth / 2;
+        const cy = cellEl.offsetTop + cellEl.offsetHeight / 2;
+        const color = GEM_COLORS[colorIdx] || '#ffd56b';
+
+        for (let s = 0; s < 6; s++) {
+          const angle = (Math.PI * 2 * s) / 6 + (Math.random() - 0.5) * 0.5;
+          const dist = 30 + Math.random() * 30;
+          const dot = document.createElement('div');
+          dot.className = 'sparkle';
+          dot.style.left = `${cx}px`;
+          dot.style.top = `${cy}px`;
+          dot.style.background = color;
+          dot.style.boxShadow = `0 0 10px ${color}`;
+          dot.style.setProperty('--dx', `${Math.cos(angle) * dist}px`);
+          dot.style.setProperty('--dy', `${Math.sin(angle) * dist}px`);
+          wrapperEl.appendChild(dot);
+          setTimeout(() => dot.remove(), 550);
+        }
+      }
+
+      function spawnFloatingScore(cellIndex, points, isCombo = false) {
+        const cellEl = boardEl.children[cellIndex];
+        if (!cellEl) return;
+        const el = document.createElement('div');
+        el.className = 'floating-score';
+        el.textContent = `+${points}${isCombo ? ' 🔥' : ''}`;
+        el.style.left = `${cellEl.offsetLeft + cellEl.offsetWidth / 2}px`;
+        el.style.top = `${cellEl.offsetTop + cellEl.offsetHeight / 2}px`;
+        wrapperEl.appendChild(el);
+        setTimeout(() => el.remove(), 950);
+      }
+
+      // --- Renderização ---
+      function updateHeaderUI() {
+        $('level').textContent = level;
+        const timerEl = $('timer');
+        timerEl.textContent = `${timeLeft}s`;
+        timerEl.classList.toggle('low-moves', timeLeft <= 5);
+
+        const movesEl = $('moves');
+        movesEl.textContent = moves;
+        movesEl.classList.toggle('low-moves', moves <= 5);
+
+        $('score').textContent = score.toLocaleString('pt-PT');
+        const remaining = Math.max(0, goal - score);
+        $('missionText').innerHTML = `<span>🎯 Objetivo: <b>${goal.toLocaleString('pt-PT')}</b></span><span>Faltam <b>${remaining.toLocaleString('pt-PT')}</b></span>`;
+
+        const pct = Math.min(100, Math.round((score / goal) * 100));
+        $('progressFill').style.width = `${pct}%`;
+
+        const hintBtn = $('hint');
+        const shuffleBtn = $('shuffle');
+
+        hintBtn.disabled = score < 100 || busy || finished;
+        hintBtn.textContent = hintBtn.disabled ? '🔒 Dica' : '✨ Dica (−100)';
+
+        shuffleBtn.disabled = score < 200 || busy || finished;
+        shuffleBtn.textContent = shuffleBtn.disabled ? '🔒 Misturar' : '🔀 Misturar (−200)';
+
+        $('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
+        $('soundToggle').title = soundEnabled ? 'Desligar som' : 'Ligar som';
+      }
+
+      function renderBoard(droppingIndices = new Set()) {
+        updateHeaderUI();
+        const fragment = document.createDocumentFragment();
+
+        grid.forEach((cellData, i) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'cell';
+          if (selected === i) btn.classList.add('selected');
+          if (hintCells.includes(i)) btn.classList.add('hint-glow');
+          if (cellData?.special) btn.classList.add('is-special');
+
+          btn.setAttribute('aria-label', `Linha ${Math.floor(i / N) + 1}, coluna ${(i % N) + 1}: ${cellData ? ICONS[cellData.color] : 'vazio'}`);
+
+          if (cellData) {
+            const gemSpan = document.createElement('span');
+            gemSpan.className = 'gem' + (droppingIndices.has(i) ? ' drop' : '');
+            gemSpan.textContent = ICONS[cellData.color];
+            btn.appendChild(gemSpan);
+
+            if (cellData.special) {
+              const badge = document.createElement('span');
+              badge.className = 'special-badge';
+              badge.textContent = SPECIAL_ICONS[cellData.special];
+              btn.appendChild(badge);
+            }
+          }
+
+          // Eventos de Toque
+          btn.addEventListener('click', () => handleTap(i));
+          btn.addEventListener('pointerdown', e => {
+            if (busy || finished) return;
+            btn.dataset.startX = e.clientX;
+            btn.dataset.startY = e.clientY;
+            try { btn.setPointerCapture(e.pointerId); } catch {}
+          });
+          btn.addEventListener('pointermove', e => {
+            if (btn.dataset.startX === undefined || busy || finished) return;
+            const dx = e.clientX - Number(btn.dataset.startX);
+            const dy = e.clientY - Number(btn.dataset.startY);
+            if (Math.hypot(dx, dy) > 25) {
+              delete btn.dataset.startX;
+              const r = Math.floor(i / N), c = i % N;
+              let tr = r, tc = c;
+              if (Math.abs(dx) > Math.abs(dy)) tc += dx > 0 ? 1 : -1;
+              else tr += dy > 0 ? 1 : -1;
+              if (valid(tr, tc)) {
+                selected = null;
+                hintCells = [];
+                executeTurn(i, idx(tr, tc));
+              }
+            }
+          });
+          btn.addEventListener('pointerup', () => { delete btn.dataset.startX; });
+          btn.addEventListener('pointercancel', () => { delete btn.dataset.startX; });
+
+          fragment.appendChild(btn);
+        });
+
+        boardEl.replaceChildren(fragment);
+      }
+
+      function msg(text) {
+        $('message').textContent = text;
+      }
+
+      function handleTap(i) {
+        if (busy || finished) return;
+        hintCells = [];
+
+        if (selected === null) {
+          selected = i;
+          sfx.select();
+          renderBoard();
+          return;
+        }
+        if (selected === i) {
+          selected = null;
+          renderBoard();
+          return;
+        }
+        if (adj(selected, i)) {
+          const a = selected;
+          selected = null;
+          executeTurn(a, i);
+        } else {
+          selected = i;
+          sfx.select();
+          renderBoard();
+        }
+      }
+
+      function expandSpecials(initialSet) {
+        const toClear = new Set(initialSet);
+        const queue = [...initialSet];
+        let triggeredSpecial = false;
+
+        while (queue.length > 0) {
+          const curr = queue.shift();
+          const cell = grid[curr];
+          if (!cell || !cell.special) continue;
+          triggeredSpecial = true;
+          const r = Math.floor(curr / N), c = curr % N;
+
+          if (cell.special === 'ray') {
+            for (let k = 0; k < N; k++) {
+              const h = idx(r, k), v = idx(k, c);
+              if (!toClear.has(h)) { toClear.add(h); queue.push(h); }
+              if (!toClear.has(v)) { toClear.add(v); queue.push(v); }
+            }
+          } else if (cell.special === 'bomb') {
+            for (let dr = -1; dr <= 1; dr++) {
+              for (let dc = -1; dc <= 1; dc++) {
+                if (valid(r + dr, c + dc)) {
+                  const nIdx = idx(r + dr, c + dc);
+                  if (!toClear.has(nIdx)) { toClear.add(nIdx); queue.push(nIdx); }
+                }
+              }
+            }
+          }
+        }
+        return { toClear, triggeredSpecial };
+      }
+
+      async function executeTurn(a, b) {
+        if (busy || finished || !adj(a, b)) return;
+        busy = true;
+        updateHeaderUI();
+
+        swapData(a, b);
+        renderBoard();
+        sfx.swap();
+        await sleep(160);
+
+        const initialGroups = findGroups(grid);
+        if (!initialGroups.length) {
+          sfx.invalid();
+          swapData(a, b);
+          renderBoard();
+          boardEl.children[a]?.classList.add('shake');
+          boardEl.children[b]?.classList.add('shake');
+          msg('Essa troca não cria uma combinação.');
+          await sleep(300);
+          busy = false;
+          updateHeaderUI();
+          return;
+        }
+
+        moves--;
+        let chain = 0;
+        let turnPoints = 0;
+
+        while (true) {
+          if (finished) break;
+          const groups = findGroups(grid);
+          if (!groups.length) break;
+          chain++;
+
+          const matchedSet = new Set();
+          const spawnMap = new Map();
+
+          for (const g of groups) {
+            g.forEach(idxCell => matchedSet.add(idxCell));
+            if (g.length >= 4) {
+              const spawnIdx = g.includes(b) ? b : (g.includes(a) ? a : g[Math.floor(g.length / 2)]);
+              const color = grid[spawnIdx]?.color ?? 0;
+              const type = g.length >= 5 ? 'bomb' : 'ray';
+
+              const prev = spawnMap.get(spawnIdx);
+              if (!prev || (prev.type === 'ray' && type === 'bomb')) {
+                spawnMap.set(spawnIdx, { index: spawnIdx, color, type });
+              }
+            }
+          }
+
+          const { toClear, triggeredSpecial } = expandSpecials(matchedSet);
+
+          toClear.forEach(pos => {
+            const gemEl = boardEl.children[pos]?.querySelector('.gem');
+            if (gemEl) gemEl.classList.add('pop');
+            if (grid[pos]) spawnSparkles(pos, grid[pos].color);
+          });
+
+          if (triggeredSpecial) sfx.special();
+          else sfx.match(chain);
+
+          const stepPoints = toClear.size * 70 * chain + (spawnMap.size * 100);
+          turnPoints += stepPoints;
+          score += stepPoints;
+
+          const centerCell = [...toClear][Math.floor(toClear.size / 2)];
+          spawnFloatingScore(centerCell, stepPoints, chain > 1);
+          updateHeaderUI();
+
+          await sleep(300);
+          if (finished) break;
+
+          toClear.forEach(pos => { grid[pos] = null; });
+          for (const sp of spawnMap.values()) {
+            grid[sp.index] = { color: sp.color, special: sp.type };
+          }
+
+          const dropping = new Set();
+          for (let c = 0; c < N; c++) {
+            const surviving = [];
+            for (let r = N - 1; r >= 0; r--) {
+              if (grid[idx(r, c)] !== null) surviving.push(grid[idx(r, c)]);
+            }
+            for (let r = N - 1; r >= 0; r--) {
+              const sIdx = N - 1 - r;
+              if (sIdx < surviving.length) {
+                if (grid[idx(r, c)] !== surviving[sIdx]) dropping.add(idx(r, c));
+                grid[idx(r, c)] = surviving[sIdx];
+              } else {
+                grid[idx(r, c)] = { color: rnd(ICONS.length), special: null };
+                dropping.add(idx(r, c));
+              }
+            }
+          }
+
+          renderBoard(dropping);
+          await sleep(320);
+        }
+
+        if (!finished) {
+          msg(`✨ +${turnPoints} pontos${chain > 1 ? ` · Combo x${chain}!` : '!'}`);
+
+          if (score >= goal) {
+            finished = true;
+            stopTimer();
+            sfx.win();
+            const nextLevel = level + 1;
+            const nextMoves = Math.max(16, 23 - Math.floor(nextLevel / 3));
+            const nextGoal = 900 + (nextLevel - 1) * 400;
+            try {
+              localStorage.setItem('reino-joias-v3', JSON.stringify({
+                level: nextLevel, moves: nextMoves, score: 0, goal: nextGoal,
+                timeLeft: LEVEL_TIME, grid, soundEnabled
+              }));
+            } catch (e) {}
+
+            showModal(
+              '🏆', 'Nível concluído!',
+              `Conseguiste ${score.toLocaleString('pt-PT')} pontos em ${LEVEL_TIME - timeLeft}s!`,
+              [{
+                label: 'Próximo nível',
+                primary: true,
+                action: () => {
+                  level = nextLevel;
+                  score = 0;
+                  moves = nextMoves;
+                  goal = nextGoal;
+                  generateBoard();
+                  finished = false;
+                  msg('Novo nível! Tens 60 segundos 👑');
+                  renderBoard();
+                  startTimer(true);
+                  save();
+                }
+              }]
+            );
+          } else if (moves <= 0) {
+            finished = true;
+            stopTimer();
+            sfx.lose();
+            showModal(
+              '💔', 'Fim das jogadas',
+              `Faltaram ${(goal - score).toLocaleString('pt-PT')} pontos para a missão.`,
+              [{ label: 'Tentar novamente', primary: true, action: restartLevel }]
+            );
+          } else {
+            if (!findPossibleMove()) {
+              generateBoard();
+              renderBoard();
+              msg('Sem combinações possíveis: tabuleiro renovado!');
+            }
+            save();
+          }
+        }
+
+        busy = false;
+        updateHeaderUI();
+      }
+
+      function restartLevel() {
+        score = 0;
+        moves = Math.max(16, 23 - Math.floor(level / 3));
+        generateBoard();
+        finished = false;
+        msg('Tenta novamente! Tens 60 segundos!');
+        renderBoard();
+        startTimer(true);
+        save();
+      }
+
+      function showModal(icon, title, content, buttons, isHtml = false) {
+        $('modalIcon').textContent = icon;
+        $('modalTitle').textContent = title;
+        const bodyEl = $('modalBody');
+        if (isHtml) {
+          bodyEl.innerHTML = content;
+        } else {
+          const p = document.createElement('p');
+          p.textContent = content;
+          bodyEl.replaceChildren(p);
+        }
+        const actionsEl = $('modalActions');
+        actionsEl.replaceChildren(...buttons.map(b => {
+          const btn = document.createElement('button');
+          btn.textContent = b.label;
+          if (!b.primary) btn.className = 'secondary';
+          btn.onclick = () => {
+            $('overlay').classList.remove('visible');
+            b.action?.();
+          };
+          return btn;
+        }));
+        $('overlay').classList.add('visible');
+      }
+
+      // --- Inicialização e Eventos Globais ---
+      $('helpBtn').onclick = () => {
+        showModal(
+          '👑', 'Como Jogar',
+          `<ul class="help-list">
+            <li><b>Combinar 3:</b> Toca em duas jóias vizinhas ou desliza uma jóia para o lado.</li>
+            <li><b>⚡ Raio (4 em linha):</b> Limpa a linha e a coluna!</li>
+            <li><b>💥 Bomba (5+):</b> Explode uma área 3x3!</li>
+          </ul>`,
+          [{ label: 'Entendi!', primary: true }],
+          true
+        );
+      };
+
+      $('soundToggle').onclick = () => {
+        soundEnabled = !soundEnabled;
+        if (soundEnabled) sfx.select();
+        updateHeaderUI();
+        save();
+      };
+
+      $('hint').onclick = () => {
+        if (busy || finished || score < 100) return;
+        const move = findPossibleMove();
+        if (!move) { generateBoard(); renderBoard(); return; }
+        score -= 100;
+        selected = null;
+        hintCells = move;
+        sfx.select();
+        renderBoard();
+        msg('✨ Troca as duas jóias a verde!');
+        save();
+      };
+
+      $('shuffle').onclick = () => {
+        if (busy || finished || score < 200) return;
+        score -= 200;
+        selected = null;
+        hintCells = [];
+        generateBoard();
+        sfx.swap();
+        renderBoard();
+        msg('🔀 Tabuleiro misturado!');
+        save();
+      };
+
+      $('restart').onclick = () => {
+        if (busy) return;
+        showModal(
+          '↻', 'Reiniciar?',
+          'Vais voltar ao nível 1 e perder o progresso.',
+          [
+            { label: 'Cancelar', primary: false },
+            {
+              label: 'Sim, reiniciar',
+              primary: true,
+              action: () => {
+                level = 1;
+                goal = 900;
+                restartLevel();
+              }
+            }
+          ]
+        );
+      };
+
+      // Atualiza o layout com debounce se o ecrã rodar ou mudar de tamanho
+      let resizeTimeout = null;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          if (!busy) updateHeaderUI();
+        }, 120);
+      });
+
+      // Carregar jogo ou iniciar novo
+      const resumed = load();
+      if (!resumed) generateBoard();
+      if (findGroups(grid).length || !findPossibleMove()) generateBoard();
+      renderBoard();
+      startTimer(!resumed);
+      msg(resumed ? `Nível ${level} retomado! Tens ${timeLeft}s!` : 'Tens 60 segundos! Boa sorte!');
+    })();
+  </script>
+</body>
+</html>
